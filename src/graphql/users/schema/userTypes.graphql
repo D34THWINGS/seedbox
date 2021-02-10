@@ -1,0 +1,6 @@
+type User {
+  _id: ObjectId!
+  name: String!
+  email: String!
+  createdAt: Date!
+}

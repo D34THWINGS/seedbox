@@ -1,0 +1,4 @@
+extend type Query {
+  "Retrieve currently logged in user profile"
+  me: User!
+}

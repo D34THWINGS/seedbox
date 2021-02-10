@@ -1,0 +1,12 @@
+schema: ./src/graphql/**/*.graphql
+generates:
+  ./src/graphql/schemaTypes.ts:
+    plugins:
+      - typescript
+    config:
+      typesPrefix: 'GQL'
+      nonOptionalTypename: false
+      avoidOptionals: false
+      scalars:
+        Date: 'Date'
+        ObjectId: 'string'

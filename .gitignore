@@ -1,0 +1,10 @@
+node_modules/
+yarn-error.log
+
+public/
+
+.env
+
+src/graphql/schemaTypes.ts
+
+.eslintcache

@@ -1,0 +1,29 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:import/errors"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "import/no-default-export": "error",
+    "import/newline-after-import": "error",
+    "import/order": "error",
+    "import/no-deprecated": "error",
+    "import/no-duplicates": "error",
+    "import/no-cycle": "error",
+    "import/no-unused-modules": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint"],
+      "extends": ["plugin:@typescript-eslint/recommended", "plugin:import/typescript"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-unused-vars": "error"
+      }
+    }
+  ]
+}
