@@ -1,5 +1,5 @@
 type User {
-  id: ObjectId!
+  _id: ObjectId!
   name: String!
   email: String!
   createdAt: Date!

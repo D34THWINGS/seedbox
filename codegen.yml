@@ -3,11 +3,18 @@ generates:
   ./src/graphql/schemaTypes.ts:
     plugins:
       - typescript
+      - typescript-resolvers
     config:
       typesPrefix: 'GQL'
       nonOptionalTypename: false
       avoidOptionals: false
       scalars:
         Date: 'Date'
-        ObjectId: 'string'
+        ObjectId: ../services/databaseService#DocumentId
         Upload: 'unknown'
+      contextType: ./graphqlTypes#GraphQLContext
+      mappers:
+        User: ../services/databaseService#User
+        Torrent: ../services/databaseService#Torrent
+        TorrentInfo: ../services/torrentService#TorrentInfo
+        TorrentFile: ../services/torrentService#TorrentFile

@@ -1,10 +1,5 @@
-import { RootResolverObject } from '../../graphqlTypes'
-import { GQLQuery } from '../../schemaTypes'
-import { serialize } from '../../../helpers/serialization'
+import { GQLResolvers } from '../../schemaTypes'
 
-export const userQueriesResolvers: RootResolverObject<
-  unknown,
-  Pick<GQLQuery, 'me'>
-> = {
-  me: (_, __, { auth }) => serialize(auth.user),
+export const userQueriesResolvers: GQLResolvers['Query'] = {
+  me: (_, __, { auth }) => auth.user,
 }

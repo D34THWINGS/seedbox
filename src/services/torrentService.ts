@@ -5,6 +5,26 @@ import FSChunkStore from 'fs-chunk-store'
 import { getTorrentFileIdFromName } from '../helpers/torrents'
 import { Logger } from './logger'
 
+export type TorrentInfo = {
+  _id: string
+  name: string
+  paused: boolean
+  done: boolean
+  length: number
+  downloaded: number
+  downloadSpeed: number
+  timeRemaining: number
+  progress: number
+}
+
+export type TorrentFile = {
+  _id: string
+  name: string
+  length: number
+  downloaded: number
+  progress: number
+}
+
 export const makeTorrentService = (logger: Logger) => {
   const client = new WebTorrent()
   const emitter = new EventEmitter()
@@ -48,13 +68,13 @@ export const makeTorrentService = (logger: Logger) => {
       })
       return torrent.infoHash
     },
-    getTorrent(link: string | Buffer) {
+    getTorrent(link: string | Buffer): TorrentInfo | null {
       const torrent = client.get(link)
       if (!torrent) {
         return null
       }
       return {
-        id: torrent.infoHash,
+        _id: torrent.infoHash,
         name: torrent.name,
         paused: torrent.paused,
         done: torrent.done,
@@ -87,14 +107,14 @@ export const makeTorrentService = (logger: Logger) => {
       }
       torrent.resume()
     },
-    listTorrentFiles(link: string | Buffer) {
+    listTorrentFiles(link: string | Buffer): TorrentFile[] {
       const torrent = client.get(link)
       if (!torrent) {
         return []
       }
 
       return torrent.files.map((file) => ({
-        id: getTorrentFileIdFromName(file.name),
+        _id: getTorrentFileIdFromName(file.name),
         name: file.name,
         length: file.length,
         downloaded: file.downloaded,

@@ -1,5 +1,5 @@
 type TorrentFile {
-  id: ID!
+  _id: ID!
   name: String!
   length: Int!
   downloaded: Int!
@@ -7,7 +7,7 @@ type TorrentFile {
 }
 
 type TorrentInfo {
-  id: ID!
+  _id: ID!
   name: String!
   paused: Boolean!
   done: Boolean!
@@ -20,7 +20,7 @@ type TorrentInfo {
 }
 
 type Torrent {
-  id: ObjectId!
+  _id: ObjectId!
   creator: User
   createdAt: Date!
   info: TorrentInfo

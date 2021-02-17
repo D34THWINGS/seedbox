@@ -1,31 +1,21 @@
 import { FileUpload } from 'graphql-upload'
 import { UserInputError } from 'apollo-server-express'
-import { RootResolverObject } from '../../graphqlTypes'
 import {
   GQLMutationAddTorrentWithMagnetArgs,
-  GQLMutation,
   GQLMutationPauseResumeTorrentArgs,
   GQLMutationAddTorrentWithFileArgs,
+  GQLResolvers,
 } from '../../schemaTypes'
 import { UserAddsTorrent } from '../../../contexts/torrents/userAddsTorrent'
-import { serialize } from '../../../helpers/serialization'
 import { getStreamToBase64 } from '../../../helpers/torrents'
 import { UserPausesOrResumesTorrent } from '../../../contexts/torrents/userPausesOrResumesTorrent'
 
-export const torrentMutationsResolvers: RootResolverObject<
-  unknown,
-  Pick<
-    GQLMutation,
-    'addTorrentWithMagnet' | 'addTorrentWithFile' | 'pauseResumeTorrent'
-  >
-> = {
+export const torrentMutationsResolvers: GQLResolvers['Mutation'] = {
   addTorrentWithMagnet: async (
     _,
     { link }: GQLMutationAddTorrentWithMagnetArgs,
     { services }
-  ) => {
-    return serialize(await UserAddsTorrent(services, { magnet: link }))
-  },
+  ) => UserAddsTorrent(services, { magnet: link }),
 
   addTorrentWithFile: async (
     _,
@@ -44,14 +34,12 @@ export const torrentMutationsResolvers: RootResolverObject<
       throw new UserInputError('Torrent file size too heavy')
     }
 
-    return serialize(
-      await UserAddsTorrent(services, { torrentFile: base64String })
-    )
+    return UserAddsTorrent(services, { torrentFile: base64String })
   },
 
   pauseResumeTorrent: async (
     _,
     { torrentId, paused }: GQLMutationPauseResumeTorrentArgs,
     { services }
-  ) => serialize(await UserPausesOrResumesTorrent(services, torrentId, paused)),
+  ) => await UserPausesOrResumesTorrent(services, torrentId, paused),
 }

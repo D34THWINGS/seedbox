@@ -1,20 +1,14 @@
-import { ResolverObject } from '../../graphqlTypes'
-import { Torrent as DBTorrent } from '../../../services/databaseService'
-import { GQLTorrent, GQLTorrentInfo } from '../../schemaTypes'
-import { serialize } from '../../../helpers/serialization'
+import { GQLResolvers } from '../../schemaTypes'
 
-export const Torrent: ResolverObject<DBTorrent, GQLTorrent> = {
+export const Torrent: GQLResolvers['Torrent'] = {
   info: (torrent, _, { services }) =>
     services.torrents.getTorrent(torrent.infoHash),
 
   creator: async (torrent, _, { services }) =>
-    serialize(await services.loaders.userLoader.load(torrent.createdBy)),
+    await services.loaders.userLoader.load(torrent.createdBy),
 }
 
-export const TorrentInfo: ResolverObject<GQLTorrentInfo, GQLTorrentInfo> = {
-  files: async (torrentInfo, _, { services }) => {
-    const listTorrentFiles = services.torrents.listTorrentFiles(torrentInfo.id)
-    console.log(listTorrentFiles)
-    return listTorrentFiles
-  },
+export const TorrentInfo: GQLResolvers['TorrentInfo'] = {
+  files: async (torrentInfo, _, { services }) =>
+    services.torrents.listTorrentFiles(torrentInfo._id),
 }

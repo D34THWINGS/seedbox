@@ -11,6 +11,7 @@ import {
   Torrent,
   TorrentInfo,
 } from './torrents/resolvers/torrentTypesResolvers'
+import { GQLResolvers } from './schemaTypes'
 
 export const GRAPHQL_PATH = '/api/graphql'
 
@@ -18,7 +19,7 @@ export const makeGraphQlServer = async (
   services: Services,
   httpServer: Application
 ) => {
-  const resolvers = {
+  const resolvers: GQLResolvers = {
     Query: {
       ...userQueriesResolvers,
       ...torrentQueriesResolvers,
@@ -32,7 +33,7 @@ export const makeGraphQlServer = async (
 
   const schema = await loadSchema('**/*.graphql', {
     loaders: [new GraphQLFileLoader()],
-    resolvers,
+    resolvers: resolvers as never,
   })
 
   const server = new ApolloServer({
@@ -43,7 +44,7 @@ export const makeGraphQlServer = async (
       {
         requestDidStart(ctx) {
           if (!ctx.request.operationName) {
-            throw new UserInputError('Missing operaton name')
+            throw new UserInputError('Missing operation name')
           }
 
           services.logger.info(
