@@ -1,2 +1,3 @@
 scalar ObjectId
 scalar Date
+scalar Upload

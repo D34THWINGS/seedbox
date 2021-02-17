@@ -10,3 +10,4 @@ generates:
       scalars:
         Date: 'Date'
         ObjectId: 'string'
+        Upload: 'unknown'

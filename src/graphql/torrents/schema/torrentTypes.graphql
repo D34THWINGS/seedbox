@@ -1,0 +1,27 @@
+type TorrentFile {
+  id: ID!
+  name: String!
+  length: Int!
+  downloaded: Int!
+  progress: Float!
+}
+
+type TorrentInfo {
+  id: ID!
+  name: String!
+  paused: Boolean!
+  done: Boolean!
+  length: Int!
+  downloaded: Int!
+  downloadSpeed: Float!
+  timeRemaining: Float!
+  progress: Float!
+  files: [TorrentFile!]!
+}
+
+type Torrent {
+  id: ObjectId!
+  creator: User
+  createdAt: Date!
+  info: TorrentInfo
+}

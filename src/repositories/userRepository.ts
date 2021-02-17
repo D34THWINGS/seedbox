@@ -1,30 +1,39 @@
-import { DocumentId, User } from '../services/databaseService'
-import { Services } from '../services'
+import { DatabaseService, DocumentId, User } from '../services/databaseService'
 
-const getUsersCollection = (services: Services) =>
-  services.database.getCollection('users')
+const getUsersCollection = (database: DatabaseService) =>
+  database.getCollection('users')
 
-export const findUserByEmail = (services: Services, email: string) =>
-  getUsersCollection(services).findOne({
+export const findUserByEmail = (database: DatabaseService, email: string) =>
+  getUsersCollection(database).findOne({
     email,
   })
 
-export const findUserById = (services: Services, id: DocumentId) =>
-  getUsersCollection(services).findOne({
+export const findUserById = (database: DatabaseService, id: DocumentId) =>
+  getUsersCollection(database).findOne({
     _id: id,
   })
 
+export const findUsersByIds = (
+  database: DatabaseService,
+  userIds: DocumentId[]
+) =>
+  getUsersCollection(database)
+    .find({
+      _id: { $in: userIds },
+    })
+    .toArray()
+
 export const createUser = async (
-  services: Services,
+  database: DatabaseService,
   userData: Pick<User, 'name' | 'email' | 'password'>
 ) => {
-  const insertedUser = {
+  const insertedUser: User = {
     ...userData,
-    _id: services.database.generateId(),
+    _id: database.generateId(),
     createdAt: new Date(),
-    updateAt: new Date(),
+    updatedAt: new Date(),
     disabledAt: null,
   }
-  await getUsersCollection(services).insertOne(insertedUser)
+  await getUsersCollection(database).insertOne(insertedUser)
   return insertedUser
 }

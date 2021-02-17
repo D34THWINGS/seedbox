@@ -21,7 +21,7 @@ export const postLogin = (services: Services) =>
   wrapHandler(services, async (req, res) => {
     const { email, password } = validate<LoginBody>(req.body, bodySchema)
 
-    const user = await findUserByEmail(services, email)
+    const user = await findUserByEmail(services.database, email)
 
     if (!user || !(await comparePassword(password, user.password))) {
       throw notFound('Invalid email or password')

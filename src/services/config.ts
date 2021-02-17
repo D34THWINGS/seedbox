@@ -7,6 +7,7 @@ const configKeys = [
   'COOKIE_SECRET',
   'COOKIE_DAYS_TTL',
   'JWT_SECRET',
+  'UPLOAD_LIMIT',
 ] as const
 
 export type Config = { [K in typeof configKeys[number]]: string }

@@ -5,7 +5,7 @@ import { Config } from './config'
 export type BaseDocument = {
   _id: ObjectId
   createdAt: Date
-  updateAt: Date
+  updatedAt: Date
 }
 
 export type User = BaseDocument & {
@@ -15,8 +15,19 @@ export type User = BaseDocument & {
   disabledAt: Date | null
 }
 
+export type MagnetSource = { magnet: string }
+export type TorrentFileSource = { torrentFile: string }
+export type TorrentSource = MagnetSource | TorrentFileSource
+
+export type Torrent = BaseDocument & {
+  createdBy: ObjectId
+  source: TorrentSource
+  infoHash: string
+}
+
 export type DatabaseSchema = {
   users: User
+  torrents: Torrent
 }
 
 export type CollectionName = keyof DatabaseSchema
@@ -33,6 +44,9 @@ export const makeDatabaseService = async (config: Config) => {
 
   await database
     .collection<User>('users')
+    .createIndex('email', { unique: true })
+  await database
+    .collection<Torrent>('torrent')
     .createIndex('email', { unique: true })
 
   return {

@@ -1,0 +1,5 @@
+extend type Mutation {
+  addTorrentWithMagnet(link: String!): Torrent!
+  addTorrentWithFile(file: Upload!): Torrent!
+  pauseResumeTorrent(torrentId: ObjectId!, paused: Boolean!): Torrent!
+}

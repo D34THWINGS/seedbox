@@ -1,0 +1,4 @@
+extend type Query {
+  showTorrents: [Torrent!]!
+  showTorrentFiles(torrentId: ObjectId!): [TorrentFile!]!
+}

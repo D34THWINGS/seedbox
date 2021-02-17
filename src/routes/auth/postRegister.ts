@@ -25,7 +25,7 @@ export const postRegister = (services: Services) =>
     const userData = validate<RegisterBody>(req.body, bodySchema)
 
     try {
-      await createUser(services, {
+      await createUser(services.database, {
         ...userData,
         password: await hashPassword(userData.password),
       })

@@ -2,7 +2,6 @@ import { RequestHandler } from 'express'
 import { forbidden } from '@hapi/boom'
 import { Services } from '../services'
 import { verifyToken } from '../helpers/authentication'
-import { findUserById } from '../repositories/userRepository'
 
 export const makeAuthenticationMiddleware = (
   services: Services
@@ -13,8 +12,7 @@ export const makeAuthenticationMiddleware = (
   }
 
   const { userId } = await verifyToken(services, sessionCookie)
-  const user = await findUserById(
-    services,
+  const user = await services.loaders.userLoader.load(
     services.database.generateId(userId)
   )
   if (!user || user.disabledAt) {

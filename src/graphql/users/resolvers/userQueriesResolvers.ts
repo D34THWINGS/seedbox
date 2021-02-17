@@ -6,5 +6,5 @@ export const userQueriesResolvers: RootResolverObject<
   unknown,
   Pick<GQLQuery, 'me'>
 > = {
-  me: (_, __, context) => serialize(context.auth.user),
+  me: (_, __, { auth }) => serialize(auth.user),
 }
