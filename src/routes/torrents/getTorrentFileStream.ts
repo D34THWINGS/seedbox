@@ -48,11 +48,7 @@ export const makeGetTorrentFileStream = (services: Services) =>
       throw new NotFoundError('File not found')
     }
 
-    const filePath = path.join(
-      __dirname,
-      '../../../downloads/',
-      relativeFilePath
-    )
+    const filePath = path.join(process.cwd(), 'downloads/', relativeFilePath)
     const { size: videoSize } = await fs.promises.stat(filePath)
 
     // Parse Range

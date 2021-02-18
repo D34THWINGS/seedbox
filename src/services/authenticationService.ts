@@ -1,22 +1,27 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import { forbidden } from '@hapi/boom'
-import { User } from './databaseService'
+import { DocumentId } from './database/databaseSchema'
+import { LoadersService } from './loaders/loadersService'
 
 type Session = {
-  user: User
+  userId: DocumentId
 }
 
-export const makeAuthenticationService = () => {
+export const makeAuthenticationService = (loadersService: LoadersService) => {
   const sessionStorage = new AsyncLocalStorage<Session>()
 
   return {
-    injectSession: (user: User) => sessionStorage.enterWith({ user }),
-    getAuthenticatedUser: () => {
+    injectSession: (userId: DocumentId) => sessionStorage.enterWith({ userId }),
+    getAuthenticatedUser: async () => {
       const session = sessionStorage.getStore()
-      if (!session?.user) {
+      if (!session?.userId) {
         throw forbidden()
       }
-      return session.user
+      const user = await loadersService.userLoader.load(session.userId)
+      if (!user || user.disabledAt) {
+        throw forbidden()
+      }
+      return user
     },
   }
 }

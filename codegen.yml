@@ -10,11 +10,11 @@ generates:
       avoidOptionals: false
       scalars:
         Date: 'Date'
-        ObjectId: ../services/databaseService#DocumentId
+        ObjectId: ../services/database/databaseSchema#DocumentId
         Upload: 'unknown'
       contextType: ./graphqlTypes#GraphQLContext
       mappers:
-        User: ../services/databaseService#User
-        Torrent: ../services/databaseService#Torrent
-        TorrentInfo: ../services/torrentService#TorrentInfo
-        TorrentFile: ../services/torrentService#TorrentFile
+        User: ../services/database/databaseSchema#User
+        Torrent: ../services/database/databaseSchema#Torrent
+        TorrentInfo: ../services/torrents/torrentTypes#TorrentInfo
+        TorrentFile: ../services/torrents/torrentTypes#TorrentFile

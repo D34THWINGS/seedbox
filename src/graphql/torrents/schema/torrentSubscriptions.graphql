@@ -1,0 +1,4 @@
+extend type Subscription {
+  torrentAdded: Torrent!
+  torrentsProgressed: [TorrentInfo!]!
+}

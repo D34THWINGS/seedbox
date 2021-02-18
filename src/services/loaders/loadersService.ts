@@ -1,13 +1,13 @@
 import DataLoader from 'dataloader'
 import {
   BaseDocument,
-  DatabaseService,
   DocumentId,
   Torrent,
   User,
-} from '../databaseService'
+} from '../database/databaseSchema'
 import { findUsersByIds } from '../../repositories/userRepository'
 import { findTorrentsByIds } from '../../repositories/torrentsRepository'
+import { DatabaseService } from '../database/databaseService'
 
 const order = <T extends BaseDocument, K extends keyof T>(
   results: T[],
@@ -29,3 +29,5 @@ export const makeLoadersService = (database: DatabaseService) => {
     ),
   }
 }
+
+export type LoadersService = ReturnType<typeof makeLoadersService>

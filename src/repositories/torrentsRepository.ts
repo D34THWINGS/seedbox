@@ -1,8 +1,5 @@
-import {
-  DatabaseService,
-  DocumentId,
-  Torrent,
-} from '../services/databaseService'
+import { DocumentId, Torrent } from '../services/database/databaseSchema'
+import { DatabaseService } from '../services/database/databaseService'
 
 const getTorrentsCollection = (database: DatabaseService) =>
   database.getCollection('torrents')

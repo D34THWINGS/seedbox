@@ -6,7 +6,7 @@ import morgan from 'morgan'
 // import csrf from 'csurf'
 import { makeAuthRouter } from './routes/auth/authRouter'
 import { makeServices } from './services'
-import { GRAPHQL_PATH, makeGraphQlServer } from './graphql/graphqlServer'
+import { makeGraphQlServer } from './graphql/graphqlServer'
 import { makeAuthenticationMiddleware } from './middlewares/authenticationMiddleware'
 import { makeErrorMiddleware } from './middlewares/errorMiddleware'
 import { bootstrapServer } from './bootstrap'
@@ -42,8 +42,7 @@ const createServer = async () => {
     })
   )
 
-  app.use(GRAPHQL_PATH, makeAuthenticationMiddleware(services))
-  await makeGraphQlServer(services, app)
+  const httpServer = await makeGraphQlServer(services, app)
 
   app.use(express.static(publicPath))
   // app.use(csrfProtection, (req, res, next) => {
@@ -51,12 +50,13 @@ const createServer = async () => {
   //   next()
   // })
   app.use(makeAuthRouter(services))
+  app.use(makeAuthenticationMiddleware(services))
   app.get(GET_TORRENT_FILE, makeGetTorrentFile(services))
   app.get(GET_TORRENT_FILE_STREAM, makeGetTorrentFileStream(services))
 
   app.use(makeErrorMiddleware(services))
 
-  return { server: app, services }
+  return { server: httpServer, services }
 }
 
 createServer()

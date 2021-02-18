@@ -8,6 +8,7 @@ const configKeys = [
   'COOKIE_DAYS_TTL',
   'JWT_SECRET',
   'UPLOAD_LIMIT',
+  'DOWNLOAD_SUBSCRIPTION_THROTTLE',
 ] as const
 
 export type Config = { [K in typeof configKeys[number]]: string }

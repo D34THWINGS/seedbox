@@ -22,6 +22,9 @@ export const verifyToken = (services: Services, token: string) =>
     })
   )
 
+export const verifyTokenSync = (services: Services, token: string) =>
+  verify(token, services.config.JWT_SECRET) as TokenPayload
+
 export const signResponse = (
   services: Services,
   response: Response,

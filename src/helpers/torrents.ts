@@ -1,6 +1,9 @@
 import { ReadStream } from 'fs'
 import { createHash } from 'crypto'
-import { TorrentFileSource, TorrentSource } from '../services/databaseService'
+import {
+  TorrentFileSource,
+  TorrentSource,
+} from '../services/database/databaseSchema'
 
 export const isTorrentFileSource = (
   source: TorrentSource

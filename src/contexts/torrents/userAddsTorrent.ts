@@ -1,21 +1,27 @@
 import { Services } from '../../services'
 import { createOrUpdateTorrent } from '../../repositories/torrentsRepository'
-import { TorrentSource } from '../../services/databaseService'
+import { TorrentSource } from '../../services/database/databaseSchema'
 import { getTorrentLinkFromSource } from '../../helpers/torrents'
 
 export const UserAddsTorrent = async (
   services: Services,
   source: TorrentSource
 ) => {
-  const user = services.authentication.getAuthenticatedUser()
+  const user = await services.authentication.getAuthenticatedUser()
 
   const infoHash = services.torrents.addTorrent(
     getTorrentLinkFromSource(source)
   )
 
-  return createOrUpdateTorrent(services.database, {
+  const addedTorrent = await createOrUpdateTorrent(services.database, {
     createdBy: user._id,
     source,
     infoHash,
   })
+
+  await services.pubSub.publishEvent('TORRENT_ADDED', {
+    torrentAdded: addedTorrent,
+  })
+
+  return addedTorrent
 }

@@ -1,4 +1,4 @@
-import { BaseDocument } from '../services/databaseService'
+import { BaseDocument } from '../services/database/databaseSchema'
 
 export function serialize<T extends BaseDocument>(
   document: T

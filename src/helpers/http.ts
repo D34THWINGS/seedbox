@@ -45,3 +45,11 @@ export const wrapHandler = (
     sendError(services, res, error)
   }
 }
+
+export const getTokenFromCookie = (cookieSrc: string, cname: string) => {
+  const name = cname + '='
+  const cookieRegExp = new RegExp(`^${name}`, 'i')
+  const ca = cookieSrc.replace(/\s/g, '').split(';')
+  const match = ca.find((val) => cookieRegExp.test(val))
+  return match?.replace(cookieRegExp, '') ?? null
+}

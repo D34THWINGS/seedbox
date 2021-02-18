@@ -12,13 +12,7 @@ export const makeAuthenticationMiddleware = (
   }
 
   const { userId } = await verifyToken(services, sessionCookie)
-  const user = await services.loaders.userLoader.load(
-    services.database.generateId(userId)
-  )
-  if (!user || user.disabledAt) {
-    return next(forbidden())
-  }
 
-  services.authentication.injectSession(user)
+  services.authentication.injectSession(services.database.generateId(userId))
   next()
 }

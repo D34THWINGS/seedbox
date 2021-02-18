@@ -1,4 +1,5 @@
-import { DatabaseService, DocumentId, User } from '../services/databaseService'
+import { DocumentId, User } from '../services/database/databaseSchema'
+import { DatabaseService } from '../services/database/databaseService'
 
 const getUsersCollection = (database: DatabaseService) =>
   database.getCollection('users')

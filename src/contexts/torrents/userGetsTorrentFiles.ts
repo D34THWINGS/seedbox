@@ -1,6 +1,6 @@
 import { Services } from '../../services'
 import { NotFoundError } from '../../helpers/errors'
-import { DocumentId } from '../../services/databaseService'
+import { DocumentId } from '../../services/database/databaseSchema'
 
 export const UserGetsTorrentFiles = async (
   services: Services,

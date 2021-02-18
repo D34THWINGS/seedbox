@@ -1,8 +1,8 @@
 node_modules/
 yarn-error.log
 
-public/
-downloads/
+/public/
+/downloads/
 
 .env
 

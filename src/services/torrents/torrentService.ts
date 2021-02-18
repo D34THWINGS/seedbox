@@ -1,33 +1,48 @@
 import path from 'path'
-import { EventEmitter } from 'events'
-import WebTorrent from 'webtorrent'
+import WebTorrent, { Torrent } from 'webtorrent'
 import FSChunkStore from 'fs-chunk-store'
-import { getTorrentFileIdFromName } from '../helpers/torrents'
-import { Logger } from './logger'
+import { getTorrentFileIdFromName } from '../../helpers/torrents'
+import { throttle } from '../../helpers/functions'
+import { Logger } from '../logger'
+import { PubSubService } from '../pubSubService'
+import { Config } from '../config'
+import { TorrentFile, TorrentInfo } from './torrentTypes'
 
-export type TorrentInfo = {
-  _id: string
-  name: string
-  paused: boolean
-  done: boolean
-  length: number
-  downloaded: number
-  downloadSpeed: number
-  timeRemaining: number
-  progress: number
-}
+const getTorrentInfo = (torrent: Torrent): TorrentInfo => ({
+  _id: torrent.infoHash,
+  name: torrent.name,
+  paused: torrent.paused,
+  done: torrent.done,
+  length: torrent.length,
+  downloaded: torrent.downloaded,
+  downloadSpeed: torrent.downloadSpeed,
+  timeRemaining: torrent.timeRemaining,
+  progress: torrent.progress,
+})
 
-export type TorrentFile = {
-  _id: string
-  name: string
-  length: number
-  downloaded: number
-  progress: number
-}
-
-export const makeTorrentService = (logger: Logger) => {
+export const makeTorrentService = (
+  config: Config,
+  logger: Logger,
+  pubSubService: PubSubService
+) => {
   const client = new WebTorrent()
-  const emitter = new EventEmitter()
+
+  const throttledDownloadListener = throttle(async () => {
+    const torrents = Array.from(torrentsToDispatch.values()).map(getTorrentInfo)
+    try {
+      await pubSubService.publishEvent('TORRENTS_PROGRESSED', {
+        torrentsProgressed: torrents,
+      })
+    } catch (e) {
+      logger.error(e)
+    }
+  }, parseInt(config.DOWNLOAD_SUBSCRIPTION_THROTTLE, 10))
+
+  const torrentsToDispatch = new Map<string, Torrent>()
+  const downloadListener = (torrent: Torrent) => {
+    torrentsToDispatch.set(torrent.infoHash, torrent)
+    throttledDownloadListener()
+  }
 
   client.on('torrent', (torrent) => {
     logger.debug(`Torrent "${torrent.name}" added`)
@@ -40,7 +55,7 @@ export const makeTorrentService = (logger: Logger) => {
           torrent.downloadSpeed / 1024 / 1024
         )} mb/s (${Math.round(torrent.timeRemaining / 1000)} s left)`
       )
-      emitter.emit('download')
+      downloadListener(torrent)
     })
 
     torrent.on('done', () =>
@@ -53,9 +68,6 @@ export const makeTorrentService = (logger: Logger) => {
   client.on('error', (error) => logger.error(error))
 
   return {
-    listenToDownloadEvents(callback: () => void) {
-      emitter.on('download', callback)
-    },
     addTorrent(link: string | Buffer) {
       const existingTorrent = client.get(link)
       if (existingTorrent) {
@@ -63,7 +75,7 @@ export const makeTorrentService = (logger: Logger) => {
       }
 
       const torrent = client.add(link, {
-        path: path.join(__dirname, '../../downloads'),
+        path: path.join(process.cwd(), 'downloads/'),
         store: FSChunkStore,
       })
       return torrent.infoHash
@@ -73,17 +85,7 @@ export const makeTorrentService = (logger: Logger) => {
       if (!torrent) {
         return null
       }
-      return {
-        _id: torrent.infoHash,
-        name: torrent.name,
-        paused: torrent.paused,
-        done: torrent.done,
-        length: torrent.length,
-        downloaded: torrent.downloaded,
-        downloadSpeed: torrent.downloadSpeed,
-        timeRemaining: torrent.timeRemaining,
-        progress: torrent.progress,
-      }
+      return getTorrentInfo(torrent)
     },
     getTorrentFilePath(link: string | Buffer, fileId: string) {
       const torrent = client.get(link)
