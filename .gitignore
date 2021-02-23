@@ -3,6 +3,7 @@ yarn-error.log
 
 /public/
 /downloads/
+/dist/
 
 .env
 

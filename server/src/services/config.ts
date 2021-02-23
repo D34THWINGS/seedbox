@@ -11,12 +11,13 @@ const configKeys = [
   'JWT_SECRET',
   'UPLOAD_LIMIT',
   'DOWNLOAD_SUBSCRIPTION_THROTTLE',
+  'DOWNLOAD_FOLDER',
 ] as const
 
 export type Config = { [K in typeof configKeys[number]]: string }
 
 export const makeConfig = () => {
-  const { error, parsed } = loadConfig({ path: path.join(__dirname, '../../../.env') })
+  const { error, parsed } = loadConfig({ path: path.join(process.cwd(), '.env') })
 
   if (error || !parsed) {
     throw new Error('Server configuration not found')

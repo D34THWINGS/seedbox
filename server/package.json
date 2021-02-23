@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*.ts' -e ts,js,json --exec 'node --inspect=0.0.0.0:9229 -r ts-node/register src/server.ts'",
+    "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

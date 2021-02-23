@@ -2,11 +2,13 @@
   "name": "seedbox",
   "private": true,
   "version": "1.0.0",
-  "main": "server/src/server.ts",
+  "main": "dist/server.js",
   "license": "MIT",
   "workspaces": ["server"],
   "scripts": {
+    "start": "NODE_ENV=production node .",
     "dev": "yarn workspace @seedbox/server dev",
+    "build": "yarn workspace @seedbox/server build",
     "typecheck": "yarn workspace @seedbox/server typecheck",
     "lint": "eslint \"server/src/**/*.ts\"",
     "lint:cache": "yarn lint --cache",
@@ -24,6 +26,6 @@
     "prettier": "^2.2.1"
   },
   "engines": {
-    "node": "~14.0.0"
+    "node": "^14.0.0"
   }
 }

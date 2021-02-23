@@ -10,7 +10,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "target": "ES2020",
-    "outDir": "dist",
+    "outDir": "../dist",
     "noImplicitReturns": true,
     "baseUrl": ".",
     "paths": {

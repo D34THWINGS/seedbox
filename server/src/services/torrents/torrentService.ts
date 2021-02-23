@@ -67,7 +67,8 @@ export const makeTorrentService = (
 
   client.on('error', (error) => logger.error(error))
 
-  const downloadsPath = path.join(process.cwd(), '../downloads/')
+  const downloadsPath = path.resolve(config.DOWNLOAD_FOLDER)
+  logger.debug(`Downloading files in: ${downloadsPath}`)
 
   return {
     getDownloadsPath() {
