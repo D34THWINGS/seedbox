@@ -10,7 +10,7 @@
       "ref"  : "origin/master",
       "repo" : "git@github.com:d34thwings/seedbox.git",
       "path" : "/home/bdelamarre/seedbox",
-      "post-deploy" : "yarn install; yarn build"
+      "post-deploy" : "/home/bdelamarre/.nvm/versions/node/v14.16.0/bin/yarn install; /home/bdelamarre/.nvm/versions/node/v14.16.0/bin/yarn build"
     }
   }
 }
