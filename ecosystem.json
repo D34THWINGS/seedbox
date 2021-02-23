@@ -1,0 +1,16 @@
+{
+  "apps" : [{
+    "name" : "Seedbox Server",
+    "script" : "dist/server.js"
+  }],
+  "deploy" : {
+    "production" : {
+      "user" : "bdelamarre",
+      "host" : ["redeemer.ddns.net"],
+      "ref"  : "origin/master",
+      "repo" : "git@github.com:d34thwings/seedbox.git",
+      "path" : "/home/bdelamarre/seedbox",
+      "post-deploy" : "yarn install; yarn build"
+    }
+  }
+}
