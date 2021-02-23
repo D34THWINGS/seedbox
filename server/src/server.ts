@@ -3,6 +3,8 @@ import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
+import helmet from 'helmet'
+import compression from 'compression'
 // import csrf from 'csurf'
 import { makeAuthRouter } from './routes/auth/authRouter'
 import { makeServices } from './services'
@@ -33,6 +35,7 @@ const createServer = async () => {
   //   },
   // })
 
+  app.use(helmet());
   app.use(json({ strict: true }))
   app.use(urlencoded({ extended: true }))
   app.use(cookieParser(services.config.COOKIE_SECRET))
@@ -41,6 +44,7 @@ const createServer = async () => {
       stream: { write: (str) => services.logger.http(str.replace('\n', '')) },
     })
   )
+  app.use(compression());
 
   app.use(express.static(publicPath))
   // app.use(csrfProtection, (req, res, next) => {
