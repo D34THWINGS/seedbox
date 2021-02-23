@@ -10,7 +10,10 @@
       "ref"  : "origin/master",
       "repo" : "git@github.com:d34thwings/seedbox.git",
       "path" : "/home/bdelamarre/seedbox",
-      "post-deploy" : "/home/bdelamarre/.nvm/versions/node/v14.16.0/bin/yarn install; /home/bdelamarre/.nvm/versions/node/v14.16.0/bin/yarn build"
+      "post-deploy" : "source ~/.bashrc && nvm use && yarn install --production=false --frozen-lockfile && yarn build",
+      "env"  : {
+        "NODE_ENV": "production"
+      }
     }
   }
 }
