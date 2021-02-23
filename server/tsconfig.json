@@ -18,5 +18,8 @@
       "stream-transcoder": ["src/@types/streamTranscoder.d.ts"]
     }
   },
-  "include": ["./src/**/*.ts", "./src/**/*.d.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ]
 }

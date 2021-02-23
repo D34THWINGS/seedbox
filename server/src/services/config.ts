@@ -1,3 +1,4 @@
+import path from 'path'
 import { config as loadConfig } from 'dotenv'
 
 const configKeys = [
@@ -15,7 +16,7 @@ const configKeys = [
 export type Config = { [K in typeof configKeys[number]]: string }
 
 export const makeConfig = () => {
-  const { error, parsed } = loadConfig()
+  const { error, parsed } = loadConfig({ path: path.join(__dirname, '../../../.env') })
 
   if (error || !parsed) {
     throw new Error('Server configuration not found')

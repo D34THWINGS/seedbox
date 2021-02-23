@@ -39,5 +39,5 @@ export const makeGetTorrentFile = (services: Services) =>
       throw notFound('File not found')
     }
 
-    res.sendFile(path.join(process.cwd(), 'downloads/', filePath))
+    res.sendFile(path.join(services.torrents.getDownloadsPath(), filePath))
   })

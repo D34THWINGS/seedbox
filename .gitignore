@@ -6,6 +6,6 @@ yarn-error.log
 
 .env
 
-src/graphql/schemaTypes.ts
+server/src/graphql/schemaTypes.ts
 
 .eslintcache

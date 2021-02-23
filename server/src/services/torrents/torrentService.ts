@@ -67,7 +67,12 @@ export const makeTorrentService = (
 
   client.on('error', (error) => logger.error(error))
 
+  const downloadsPath = path.join(process.cwd(), '../downloads/')
+
   return {
+    getDownloadsPath() {
+      return downloadsPath
+    },
     addTorrent(link: string | Buffer) {
       const existingTorrent = client.get(link)
       if (existingTorrent) {
@@ -75,7 +80,7 @@ export const makeTorrentService = (
       }
 
       const torrent = client.add(link, {
-        path: path.join(process.cwd(), 'downloads/'),
+        path: downloadsPath,
         store: FSChunkStore,
       })
       return torrent.infoHash
