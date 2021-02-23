@@ -10,14 +10,20 @@ type Session = {
 export const makeAuthenticationService = (loadersService: LoadersService) => {
   const sessionStorage = new AsyncLocalStorage<Session>()
 
+  const getAuthenticatedUserId = () => {
+    const session = sessionStorage.getStore()
+    if (!session?.userId) {
+      throw forbidden()
+    }
+    return session.userId
+  }
+
   return {
     injectSession: (userId: DocumentId) => sessionStorage.enterWith({ userId }),
+    getAuthenticatedUserId,
     getAuthenticatedUser: async () => {
-      const session = sessionStorage.getStore()
-      if (!session?.userId) {
-        throw forbidden()
-      }
-      const user = await loadersService.userLoader.load(session.userId)
+      const userId = getAuthenticatedUserId()
+      const user = await loadersService.userLoader.load(userId)
       if (!user || user.disabledAt) {
         throw forbidden()
       }

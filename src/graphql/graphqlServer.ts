@@ -1,5 +1,5 @@
 import { createServer } from 'http'
-import { Application, Request } from 'express'
+import { Application } from 'express'
 import { ApolloServer, UserInputError } from 'apollo-server-express'
 import { loadSchema } from '@graphql-tools/load'
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
@@ -17,19 +17,6 @@ import {
 } from './torrents/resolvers/torrentTypesResolvers'
 import { GQLResolvers } from './schemaTypes'
 import { makeTorrentSubscriptionsResolvers } from './torrents/resolvers/torrentSubscriptionsResolvers'
-
-export const getUserIdFromRequest = (services: Services, req: Request) => {
-  const sessionCookie = req.cookies[services.config.COOKIE_NAME]
-  if (!sessionCookie) {
-    throw forbidden()
-  }
-
-  const { userId } = verifyTokenSync(services, sessionCookie)
-  if (!userId) {
-    throw forbidden()
-  }
-  return services.database.generateId(userId)
-}
 
 export const GRAPHQL_PATH = '/api/graphql'
 export const GRAPHQL_SUBSCRIPTIONS_PATH = '/api/graphql/subscriptions'
@@ -75,14 +62,7 @@ export const makeGraphQlServer = async (
         },
       },
     ],
-    context: ({ req }): GraphQLContext => {
-      if (req) {
-        const userId = getUserIdFromRequest(services, req)
-        services.authentication.injectSession(userId)
-      }
-
-      return { services }
-    },
+    context: (): GraphQLContext => ({ services }),
     playground: {
       subscriptionEndpoint: GRAPHQL_SUBSCRIPTIONS_PATH,
       settings: {
@@ -96,7 +76,8 @@ export const makeGraphQlServer = async (
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           websocket.upgradeReq.headers.cookie,
-          services.config.COOKIE_NAME
+          services.config.COOKIE_NAME,
+          services.config.COOKIE_SECRET
         )
 
         if (!token) {

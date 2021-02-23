@@ -42,15 +42,15 @@ const createServer = async () => {
     })
   )
 
-  const httpServer = await makeGraphQlServer(services, app)
-
   app.use(express.static(publicPath))
   // app.use(csrfProtection, (req, res, next) => {
   //   res.cookie('XSRF-TOKEN', req.csrfToken())
   //   next()
   // })
   app.use(makeAuthRouter(services))
+
   app.use(makeAuthenticationMiddleware(services))
+  const httpServer = await makeGraphQlServer(services, app)
   app.get(GET_TORRENT_FILE, makeGetTorrentFile(services))
   app.get(GET_TORRENT_FILE_STREAM, makeGetTorrentFileStream(services))
 

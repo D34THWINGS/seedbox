@@ -32,13 +32,13 @@ export const signResponse = (
 ) => {
   const token = generateToken(services, userId)
   const ttl = parseInt(services.config.COOKIE_DAYS_TTL, 10)
-  return response.header(
-    'Set-Cookie',
-    `${services.config.COOKIE_NAME}=${token}; Expires=${addDays(
-      new Date(),
-      ttl
-    )}; Path=/; HttpOnly; SameSite=Strict`
-  )
+  return response.cookie(services.config.COOKIE_NAME, token, {
+    expires: addDays(new Date(), ttl),
+    signed: true,
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: services.config.USE_SECURE_COOKIES === 'true',
+  })
 }
 
 export const hashPassword = (password: string) => hash(password, 10)

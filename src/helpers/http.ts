@@ -1,4 +1,6 @@
 import { attempt, Schema, ValidationError } from 'joi'
+import { parse as parseCookie } from 'cookie'
+import { signedCookie } from 'cookie-parser'
 import { badRequest, boomify, internal, isBoom } from '@hapi/boom'
 import { RequestHandler, Response } from 'express'
 import { Services } from '../services'
@@ -46,10 +48,11 @@ export const wrapHandler = (
   }
 }
 
-export const getTokenFromCookie = (cookieSrc: string, cname: string) => {
-  const name = cname + '='
-  const cookieRegExp = new RegExp(`^${name}`, 'i')
-  const ca = cookieSrc.replace(/\s/g, '').split(';')
-  const match = ca.find((val) => cookieRegExp.test(val))
-  return match?.replace(cookieRegExp, '') ?? null
+export const getTokenFromCookie = (
+  cookieSrc: string,
+  name: string,
+  secret: string
+) => {
+  const { [name]: signedToken } = parseCookie(cookieSrc)
+  return signedCookie(signedToken, secret)
 }
